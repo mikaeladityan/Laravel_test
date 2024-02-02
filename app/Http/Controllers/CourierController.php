@@ -91,9 +91,42 @@ class CourierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCourierRequest $request, Courier $courier)
+    public function update(Request $request, Courier $courier)
     {
-        //
+        // Make the rules for validation
+        $rules = ([
+            'name' => 'required|max:255',
+            'photo' => 'image|file|max:1024',
+            'address' => 'required|string|max:255'
+        ]);
+
+        // Check Condition if user change the driver license
+        if ($request->driver_license != $courier->driver_license) {
+            $rules['driver_license'] = 'alpha_num|min:14|max:14|unique:couriers,driver_license';
+        }
+        // Check Condition if user change the phone
+        if ($request->phone != $courier->phone) {
+            $rules['phone'] = 'alpha_num|min:11|max:14|unique:couriers,phone';
+        }
+
+        //  Run The Validator
+        $data = $request->validate($rules);
+
+        // If User Upload a new photo
+        if ($request->file('photo')) {
+            // Check and search the Old Photo in storage
+            if ($request->oldPhoto) {
+                // if the old photo has match with the request, delete it from storage
+                Storage::delete($request->oldPhoto);
+            }
+            // save the photo in storage
+            $data['photo'] = $request->file('photo')->store('public/driver-photos');
+        }
+
+        // Run the method update with id of courier
+        Courier::where('id', $courier->id)->update($data);
+        // Redirect
+        return redirect('/couriers')->with('success', 'Kurir telah berhasil diupdate');
     }
 
     /**

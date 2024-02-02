@@ -118,4 +118,20 @@ class CourierTest extends TestCase
         $response->assertSee('Courier_10');
         $response->assertStatus(200);
     }
+
+    public function testEditValidationErrorRedirectBack()
+    {
+        // Create Factory
+        $courier = Courier::factory()->create();
+
+        //  Send Patch Request With Empty Value and false velue
+        $response = $this->put('/couriers/' . $courier->id, [
+            'name' => '',
+            'driver_license' => '/%23*&2'
+        ]);
+
+        // Assertion that Redirect Back After Submit Form Validation Errors.
+        $response->assertStatus(302);
+        $response->assertInvalid(['name', 'driver_license']);
+    }
 }
