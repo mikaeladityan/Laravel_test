@@ -58,4 +58,34 @@ class CourierTest extends TestCase
         $response = $this->get('/couriers?level=2');
         $response->assertStatus(200)->assertOk();
     }
+
+    public function testCreateCourierWithInstanceModel(): void
+    {
+        // Created new couriers model instance
+        $couriers = Courier::create([
+            'name' => 'Mikael Aditya N',
+            'driver_license' => '12365445665445',
+            'phone' => '12365445665445',
+            'address' => 'Surabaya',
+        ]);
+
+        $response = $this->get('/couriers');
+        $response->assertStatus(200);
+        // Check in the view the data has input before
+        $response->assertSee($couriers['name']);
+        $response->assertSee($couriers['driver_license']);
+        $response->assertSee($couriers['phone']);
+        $response->assertSee($couriers['address']);
+        $response->assertSee($couriers['level']);
+        $response->assertSee($couriers['active']);
+        $response->assertStatus(200)->assertDontSee('Not Found');
+
+        // Check if in Database has the same value as we sent to server
+        $this->assertDatabaseHas('couriers', [
+            'name' => 'Mikael Aditya N',
+            'driver_license' => '12365445665445',
+            'phone' => '12365445665445',
+            'address' => 'Surabaya',
+        ]);
+    }
 }
