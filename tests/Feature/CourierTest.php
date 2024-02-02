@@ -102,4 +102,20 @@ class CourierTest extends TestCase
         // Check if in Database has the same value as we sent to server
         $this->assertDatabaseHas('couriers', $courier);
     }
+
+    public function testPaginateMustHas10Records()
+    {
+        // Looping  11 times so it will create 11 records on table `couriers` with name=Courier_1-11
+        for ($i = 1; $i <= 11; $i++) {
+            Courier::factory()->create([
+                'name' => 'Courier_' . $i,
+            ]);
+        }
+        Courier::orderBy('created_at', 'desc')->paginate(10);
+        $response = $this->get('/couriers?page=1');
+        $response->assertJsonFragment(['per_page' => 10]);
+        $response->assertJsonCount(10, 'data');
+        $response->assertSee('Courier_10');
+        $response->assertStatus(200);
+    }
 }
