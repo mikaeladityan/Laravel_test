@@ -145,4 +145,16 @@ class CourierTest extends TestCase
         $response->assertSee($courier->name, false);
         $response->assertSee($courier->delivery_status, false);
     }
+
+    public function testDeleteCourierSuccessByTheIdVelue()
+    {
+        $courier = Courier::factory()->create();
+
+        $response = $this->delete('/couriers/' . $courier->id);
+
+        $response->assertStatus(302);
+        $response->assertRedirect('couriers');
+
+        $this->assertDatabaseMissing('couriers', $courier->toArray());
+    }
 }

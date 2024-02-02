@@ -134,6 +134,13 @@ class CourierController extends Controller
      */
     public function destroy(Courier $courier)
     {
-        //
+        // delete file
+        if ($courier->photo) {
+            Storage::delete($courier->photo);
+        }
+
+        // delete table
+        Courier::destroy($courier->id);
+        return redirect('/couriers')->with('success', 'Courier telah berhasil dihapus');
     }
 }
