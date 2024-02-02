@@ -27,6 +27,18 @@ class CourierController extends Controller
                 // Get data Courier filter by created at with DESC and make simple paginate
                 $couriers = Courier::orderBy('created_at', 'desc')->simplePaginate(10);
             }
+
+            // Check condition if user has search with request by name
+            if ($request->has('search')) {
+                // Search in database for name field using like operator
+                $couriers = Courier::where('name', 'like', '%' . $request->get('search') . '%')->simplePaginate(10);
+            }
+
+            // Check if there is a level request, then filter results
+            if ($request->has('level')) {
+                $couriers = Courier::where('level', 'like', '%' . $request->get('level') . '%')->simplePaginate(10);
+            }
+
             // Return json with status code 200 and data
             return response()->json($couriers, 200);
         }

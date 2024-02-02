@@ -26,7 +26,7 @@ class CourierTest extends TestCase
     {
         // Create new Couriers
         Courier::factory(10)->create();
-        // Get the route of Paginate
+
         $response = $this->get('/couriers?sort');
         // Check if the response success (status code 200)
         $response->assertOk();
@@ -41,5 +41,21 @@ class CourierTest extends TestCase
         foreach ($data['data'] as $item) {
             $this->assertTrue(isset($item['id']) && isset($item['name']));
         }
+    }
+
+    public function testIfUserRequestSearch()
+    {
+        Courier::factory(10)->create();
+        // Route with Get Method of Couriers with request search
+        $response = $this->get('/couriers?search=');
+        $response->assertStatus(200)->assertOk();
+    }
+
+    public function testIfUserRequestLevel()
+    {
+        Courier::factory(10)->create();
+        // Route with Get Method of Couriers with request level
+        $response = $this->get('/couriers?level=2');
+        $response->assertStatus(200)->assertOk();
     }
 }
