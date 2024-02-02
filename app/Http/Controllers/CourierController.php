@@ -75,17 +75,17 @@ class CourierController extends Controller
     {
         // This method will be used for more detail of one courier
         $courier = Courier::findOrFail($id);
-        return view('courier', compact('courier'));
+        return response()->json($courier, 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Courier $courier)
+    public function edit($id)
     {
-        return view('edit', [
-            'courier' => $courier,
-        ]);
+        // This method will be used for more detail of one courier
+        $courier = Courier::findOrFail($id);
+        return response()->json($courier, 200);
     }
 
     /**

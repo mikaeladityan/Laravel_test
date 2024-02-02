@@ -134,4 +134,15 @@ class CourierTest extends TestCase
         $response->assertStatus(302);
         $response->assertInvalid(['name', 'driver_license']);
     }
+
+    public function testEditCouriersContainsCorrectValues()
+    {
+        $courier = Courier::factory()->create();
+
+        $response = $this->get('/couriers/' . $courier->id . '/edit');
+
+        $response->assertStatus(200);
+        $response->assertSee($courier->name, false);
+        $response->assertSee($courier->delivery_status, false);
+    }
 }
