@@ -71,9 +71,11 @@ class CourierController extends Controller
         return back();
     }
 
-    public function show(Courier $courier)
+    public function show($id)
     {
-        //
+        // This method will be used for more detail of one courier
+        $courier = Courier::findOrFail($id);
+        return view('courier', compact('courier'));
     }
 
     /**
@@ -81,7 +83,9 @@ class CourierController extends Controller
      */
     public function edit(Courier $courier)
     {
-        //
+        return view('edit', [
+            'courier' => $courier,
+        ]);
     }
 
     /**
