@@ -13,7 +13,16 @@ class CourierController extends Controller
      */
     public function index()
     {
-        //
+        // Check condition if Couriers Records is empty
+        if (Courier::all()->isEmpty()) {
+            // Return to Json 404 and send message
+            return response()->json(['message' => 'Data Masih Kosong!'], 404);
+        } else {
+            // Get all couriers data from database and sort by name ASC
+            $couriers = Courier::orderBy('name')->simplePaginate(10);
+            // Return json with status code 200 and data
+            return response()->json($couriers, 200);
+        }
     }
 
     /**
