@@ -88,4 +88,18 @@ class CourierTest extends TestCase
             'address' => 'Surabaya',
         ]);
     }
+
+    public function testCreateCourierWithPostMethod(): void
+    {
+        // send the post with value of database
+        $courier = [
+            'name' => 'Mikael Aditya N',
+            'driver_license' => '12332112332112',
+            'phone' => '12332112332112',
+            'address' => 'Surabaya',
+        ];
+        $response = $this->post('/couriers', $courier);
+        // Check if in Database has the same value as we sent to server
+        $this->assertDatabaseHas('couriers', $courier);
+    }
 }
